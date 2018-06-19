@@ -23,6 +23,9 @@
 #include "rmw_fastrtps_cpp/identifier.hpp"
 #include "ros_message_serialization.hpp"
 
+#include <iostream>
+#include <chrono>
+
 extern "C"
 {
 rmw_ret_t
@@ -47,6 +50,7 @@ rmw_publish(const rmw_publisher_t * publisher, const void * ros_message)
   if (_serialize_ros_message(ros_message, ser, info->type_support_,
     info->typesupport_identifier_))
   {
+    std::cout << "RMW_PUBLISH_SEND;" << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count() << std::endl;
     if (info->publisher_->write(&ser)) {
       returnedValue = RMW_RET_OK;
     } else {

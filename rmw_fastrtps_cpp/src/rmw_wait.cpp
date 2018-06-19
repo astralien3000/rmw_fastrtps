@@ -23,6 +23,9 @@
 #include "types/custom_wait_set_info.hpp"
 #include "types/guard_condition.hpp"
 
+#include <iostream>
+#include <chrono>
+
 // helper function for wait
 bool
 check_wait_set_for_data(
@@ -37,6 +40,7 @@ check_wait_set_for_data(
       auto custom_subscriber_info = static_cast<CustomSubscriberInfo *>(data);
       // Short circuiting out of this function is possible
       if (custom_subscriber_info && custom_subscriber_info->listener_->hasData()) {
+        std::cout << "RMW_SUB_RECV;" << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count() << std::endl;
         return true;
       }
     }
@@ -154,6 +158,7 @@ rmw_wait(
       void * data = subscriptions->subscribers[i];
       auto custom_subscriber_info = static_cast<CustomSubscriberInfo *>(data);
       if (custom_subscriber_info->listener_->hasData()) {
+        std::cout << "RMW_SUB_RECV;" << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count() << std::endl;
         hasToWait = false;
       }
     }
